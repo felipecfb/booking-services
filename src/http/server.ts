@@ -1,4 +1,7 @@
 import fastify from 'fastify'
+import { env } from '../env'
+
+const { PORT } = env
 
 const app = fastify()
 
@@ -8,7 +11,7 @@ app.get('/', () => {
 
 app
   .listen({
-    port: 3333,
+    port: PORT,
     host: '0.0.0.0',
   })
   .then(() => {
