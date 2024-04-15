@@ -23,7 +23,7 @@ describe('Register Use Case', () => {
     expect(client.id).toEqual(expect.any(String))
   })
 
-  it('should hash user password upon registration', async () => {
+  it('should hash client password upon registration', async () => {
     const { client } = await sut.execute({
       name: 'John Doe',
       email: 'johndoe@example.com',
@@ -51,5 +51,15 @@ describe('Register Use Case', () => {
         password: '123456',
       }),
     ).rejects.toBeInstanceOf(Error)
+  })
+
+  it('should regular client upon registration', async () => {
+    const { client } = await sut.execute({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    })
+
+    expect(client.role).toEqual('REGULAR')
   })
 })
