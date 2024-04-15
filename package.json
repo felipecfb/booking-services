@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/http/server.ts"
+    "dev": "tsx watch src/http/server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest --dir src/domain/application/use-cases"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +17,9 @@
     "eslint": "^8.0.1",
     "prisma": "^5.12.1",
     "tsx": "^4.7.2",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.4",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.4.0"
   },
   "dependencies": {
     "@prisma/client": "5.12.1",
