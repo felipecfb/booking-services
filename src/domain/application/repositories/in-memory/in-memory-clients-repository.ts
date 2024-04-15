@@ -6,6 +6,16 @@ import { IClientsRepository } from '../clients-repository'
 export class InMemoryClientsRepository implements IClientsRepository {
   public clients: Client[] = []
 
+  async findClientByEmail(email: string): Promise<Client | null> {
+    const client = this.clients.find((client) => client.email === email)
+
+    if (!client) {
+      return null
+    }
+
+    return client
+  }
+
   async create(data: Prisma.ClientCreateInput): Promise<Client> {
     const client = {
       id: randomUUID(),
