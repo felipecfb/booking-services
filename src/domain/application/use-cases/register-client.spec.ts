@@ -1,5 +1,8 @@
-import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
+import { compare } from 'bcryptjs'
+
 import { RegisterUserUseCase } from './register-client'
+
+import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 
 let clientsRepository: InMemoryClientsRepository
 let sut: RegisterUserUseCase
@@ -18,6 +21,18 @@ describe('Register Use Case', () => {
     })
 
     expect(client.id).toEqual(expect.any(String))
+  })
+
+  it('should hash user password upon registration', async () => {
+    const { client } = await sut.execute({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    })
+
+    const isPasswordCorrectlyHashed = await compare('123456', client.password)
+
+    expect(isPasswordCorrectlyHashed).toBe(true)
   })
 
   it('should not be able to register with same email twice', async () => {

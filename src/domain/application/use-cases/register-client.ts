@@ -1,3 +1,5 @@
+import { hash } from 'bcryptjs'
+
 import { IClientsRepository } from '../repositories/clients-repository'
 
 interface RegisterUserUseCaseRequest {
@@ -10,6 +12,8 @@ export class RegisterUserUseCase {
   constructor(private clientsRepository: IClientsRepository) {}
 
   async execute({ name, email, password }: RegisterUserUseCaseRequest) {
+    const passwordHash = await hash(password, 8)
+
     const clientWithSameEmail =
       await this.clientsRepository.findClientByEmail(email)
 
@@ -20,7 +24,7 @@ export class RegisterUserUseCase {
     const client = await this.clientsRepository.create({
       name,
       email,
-      password,
+      password: passwordHash,
     })
 
     return {
