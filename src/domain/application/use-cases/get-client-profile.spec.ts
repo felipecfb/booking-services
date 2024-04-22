@@ -1,36 +1,36 @@
 import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 import { GetClientProfileUseCase } from './get-client-profile'
+import { makeClient } from 'test/factories/make-client'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
-let clientsRepository: InMemoryClientsRepository
+let inMemoryClientsRepository: InMemoryClientsRepository
 let sut: GetClientProfileUseCase
 
 describe('Get Client Profile Use Case', () => {
   beforeEach(() => {
-    clientsRepository = new InMemoryClientsRepository()
-    sut = new GetClientProfileUseCase(clientsRepository)
+    inMemoryClientsRepository = new InMemoryClientsRepository()
+    sut = new GetClientProfileUseCase(inMemoryClientsRepository)
   })
 
   it('should return a client profile', async () => {
-    const client = await clientsRepository.create({
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password',
-    })
+    const client = makeClient()
 
-    const response = await sut.execute({ clientId: client.id })
+    await inMemoryClientsRepository.create(client)
 
-    expect(response).toEqual({
-      id: client.id,
-      name: client.name,
-      email: client.email,
-      role: client.role,
-      createdAt: client.createdAt,
+    const result = await sut.execute({ clientId: client.id.toString() })
+
+    expect(result.isRight()).toBe(true)
+    expect(result.value).toEqual({
+      client: inMemoryClientsRepository.items[0],
     })
   })
 
   it('should throw if client is not found', async () => {
-    await expect(sut.execute({ clientId: 'invalid_id' })).rejects.toThrow(
-      'Client not found',
-    )
+    const result = await sut.execute({
+      clientId: 'non-existing-id',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 })

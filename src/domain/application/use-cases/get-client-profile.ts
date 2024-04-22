@@ -1,4 +1,4 @@
-import { Either } from '@/core/either'
+import { Either, left, right } from '@/core/either'
 import { ClientsRepository } from '../repositories/clients-repository'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { Client } from '@/domain/enterprise/entities/client'
@@ -17,19 +17,17 @@ type GetClientProfileUseCaseResponse = Either<
 export class GetClientProfileUseCase {
   constructor(private clientsRepository: ClientsRepository) {}
 
-  async execute({ clientId }: GetClientProfileUseCaseRequest) {
+  async execute({
+    clientId,
+  }: GetClientProfileUseCaseRequest): Promise<GetClientProfileUseCaseResponse> {
     const client = await this.clientsRepository.findClientById(clientId)
 
     if (!client) {
-      throw new Error('Client not found')
+      return left(new ResourceNotFoundError())
     }
 
-    return {
-      id: client.id,
-      name: client.name,
-      email: client.email,
-      role: client.role,
-      createdAt: client.createdAt,
-    }
+    return right({
+      client,
+    })
   }
 }
