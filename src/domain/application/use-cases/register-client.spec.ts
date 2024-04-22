@@ -1,16 +1,16 @@
 import { compare } from 'bcryptjs'
 
-import { RegisterUserUseCase } from './register-client'
+import { RegisterClientUseCase } from './register-client'
 
 import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 
 let clientsRepository: InMemoryClientsRepository
-let sut: RegisterUserUseCase
+let sut: RegisterClientUseCase
 
 describe('Register Use Case', () => {
   beforeEach(() => {
     clientsRepository = new InMemoryClientsRepository()
-    sut = new RegisterUserUseCase(clientsRepository)
+    sut = new RegisterClientUseCase(clientsRepository)
   })
 
   it('should be able to register', async () => {

@@ -2,16 +2,16 @@ import { hash } from 'bcryptjs'
 
 import { IClientsRepository } from '../repositories/clients-repository'
 
-interface RegisterUserUseCaseRequest {
+interface RegisterClientUseCaseRequest {
   name: string
   email: string
   password: string
 }
 
-export class RegisterUserUseCase {
+export class RegisterClientUseCase {
   constructor(private clientsRepository: IClientsRepository) {}
 
-  async execute({ name, email, password }: RegisterUserUseCaseRequest) {
+  async execute({ name, email, password }: RegisterClientUseCaseRequest) {
     const passwordHash = await hash(password, 8)
 
     const clientWithSameEmail =
