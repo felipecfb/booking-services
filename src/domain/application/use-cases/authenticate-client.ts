@@ -1,17 +1,22 @@
 import { compare } from 'bcryptjs'
-import { IClientsRepository } from '../repositories/clients-repository'
+import { ClientsRepository } from '../repositories/clients-repository'
+import { Either, left, right } from '@/core/either'
+import { WrongCredentialsError } from './errors/wrong-credentials-error'
 
 interface AuthenticateClientUseCaseRequest {
   email: string
   password: string
 }
 
-type AuthenticateClientUseCaseResponse = {
-  accessToken: string
-}
+type AuthenticateClientUseCaseResponse = Either<
+  WrongCredentialsError,
+  {
+    accessToken: string
+  }
+>
 
 export class AuthenticateClientUseCase {
-  constructor(private clientsRepository: IClientsRepository) {}
+  constructor(private clientsRepository: ClientsRepository) {}
 
   async execute({
     email,
@@ -20,19 +25,19 @@ export class AuthenticateClientUseCase {
     const client = await this.clientsRepository.findClientByEmail(email)
 
     if (!client) {
-      throw new Error('Client not found')
+      return left(new WrongCredentialsError())
     }
 
     const isPasswordValid = await compare(password, client.password)
 
     if (!isPasswordValid) {
-      throw new Error('Invalid email or password')
+      return left(new WrongCredentialsError())
     }
 
     const accessToken = 'valid-access-token'
 
-    return {
+    return right({
       accessToken,
-    }
+    })
   }
 }

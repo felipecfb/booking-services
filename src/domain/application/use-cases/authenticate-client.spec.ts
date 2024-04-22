@@ -1,30 +1,44 @@
 import { hash } from 'bcryptjs'
 import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 import { AuthenticateClientUseCase } from './authenticate-client'
+import { makeClient } from 'test/factories/make-client'
+import { WrongCredentialsError } from './errors/wrong-credentials-error'
 
-let clientsRepository: InMemoryClientsRepository
+let inMemoryClientsRepository: InMemoryClientsRepository
 let sut: AuthenticateClientUseCase
 
 describe('Authenticate Client Use Case', () => {
   beforeEach(() => {
-    clientsRepository = new InMemoryClientsRepository()
-    sut = new AuthenticateClientUseCase(clientsRepository)
+    inMemoryClientsRepository = new InMemoryClientsRepository()
+    sut = new AuthenticateClientUseCase(inMemoryClientsRepository)
   })
 
   it('should be able to authenticate a client', async () => {
-    const client = await clientsRepository.create({
-      name: 'any_name',
-      email: 'any_email',
-      password: await hash('any_password', 8),
+    const client = makeClient({
+      email: 'johndoe@example.com',
+      password: await hash('123456', 8),
     })
+
+    inMemoryClientsRepository.create(client)
 
     const result = await sut.execute({
-      email: client.email,
-      password: 'any_password',
+      email: 'johndoe@example.com',
+      password: '123456',
     })
 
-    expect(result).toEqual({
+    expect(result.isRight()).toBe(true)
+    expect(result.value).toEqual({
       accessToken: expect.any(String),
     })
+  })
+
+  it('should not be able to authenticate with wrong credentials', async () => {
+    const result = await sut.execute({
+      email: 'unexist_client@example.com',
+      password: '123456',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(WrongCredentialsError)
   })
 })
