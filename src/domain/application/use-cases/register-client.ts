@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs'
 import { ClientsRepository } from '../repositories/clients-repository'
 import { ClientAlreadyExistsError } from './errors/client-already-exists-error'
 import { Either, left, right } from '@/core/either'
-import { Client } from '@prisma/client'
+import { Client } from '@/domain/enterprise/entities/client'
 
 interface RegisterClientUseCaseRequest {
   name: string
@@ -35,11 +35,13 @@ export class RegisterClientUseCase {
       return left(new ClientAlreadyExistsError(email))
     }
 
-    const client = await this.clientsRepository.create({
+    const client = Client.create({
       name,
       email,
       password: passwordHash,
     })
+
+    await this.clientsRepository.create(client)
 
     return right({
       client,

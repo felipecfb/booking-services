@@ -13,7 +13,7 @@ describe('Register Use Case', () => {
     sut = new RegisterClientUseCase(inMemoryClientsRepository)
   })
 
-  it('should be able to register', async () => {
+  it('should be able to register a new client', async () => {
     const result = await sut.execute({
       name: 'John Doe',
       email: 'johndoe@example.com',

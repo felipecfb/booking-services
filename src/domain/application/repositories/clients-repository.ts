@@ -1,7 +1,7 @@
-import { Prisma, Client } from '@prisma/client'
+import { Client } from '@/domain/enterprise/entities/client'
 
 export interface ClientsRepository {
   findClientById(id: string): Promise<Client | null>
   findClientByEmail(email: string): Promise<Client | null>
-  create(data: Prisma.ClientCreateInput): Promise<Client>
+  create(client: Client): Promise<Client>
 }
