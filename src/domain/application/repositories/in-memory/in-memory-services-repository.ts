@@ -1,9 +1,9 @@
 import { Prisma, Service } from '@prisma/client'
-import { IServicesRepository } from '../services-repository'
+import { ServicesRepository } from '../services-repository'
 import { randomUUID } from 'crypto'
 
-export class InMemoryServicesRepository implements IServicesRepository {
-  public services: Service[] = []
+export class InMemoryServicesRepository implements ServicesRepository {
+  public items: Service[] = []
 
   async create(data: Prisma.ServiceCreateInput): Promise<Service> {
     const service = {
@@ -15,7 +15,7 @@ export class InMemoryServicesRepository implements IServicesRepository {
       createdAt: new Date(),
     }
 
-    this.services.push(service)
+    this.items.push(service)
 
     return service
   }

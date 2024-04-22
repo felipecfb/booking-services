@@ -1,6 +1,9 @@
 import { hash } from 'bcryptjs'
 
-import { IClientsRepository } from '../repositories/clients-repository'
+import { ClientsRepository } from '../repositories/clients-repository'
+import { ClientAlreadyExistsError } from './errors/client-already-exists-error'
+import { Either, left, right } from '@/core/either'
+import { Client } from '@prisma/client'
 
 interface RegisterClientUseCaseRequest {
   name: string
@@ -8,17 +11,28 @@ interface RegisterClientUseCaseRequest {
   password: string
 }
 
-export class RegisterClientUseCase {
-  constructor(private clientsRepository: IClientsRepository) {}
+type RegisterClientUseCaseResponse = Either<
+  ClientAlreadyExistsError,
+  {
+    client: Client
+  }
+>
 
-  async execute({ name, email, password }: RegisterClientUseCaseRequest) {
+export class RegisterClientUseCase {
+  constructor(private clientsRepository: ClientsRepository) {}
+
+  async execute({
+    name,
+    email,
+    password,
+  }: RegisterClientUseCaseRequest): Promise<RegisterClientUseCaseResponse> {
     const passwordHash = await hash(password, 8)
 
     const clientWithSameEmail =
       await this.clientsRepository.findClientByEmail(email)
 
     if (clientWithSameEmail) {
-      throw new Error('Client already exists')
+      return left(new ClientAlreadyExistsError(email))
     }
 
     const client = await this.clientsRepository.create({
@@ -27,8 +41,8 @@ export class RegisterClientUseCase {
       password: passwordHash,
     })
 
-    return {
+    return right({
       client,
-    }
+    })
   }
 }
