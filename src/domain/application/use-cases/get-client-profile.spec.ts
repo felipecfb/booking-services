@@ -1,7 +1,7 @@
-import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 import { GetClientProfileUseCase } from './get-client-profile'
 import { makeClient } from 'test/factories/make-client'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { InMemoryClientsRepository } from 'test/repositories/in-memory-clients-repository'
 
 let inMemoryClientsRepository: InMemoryClientsRepository
 let sut: GetClientProfileUseCase

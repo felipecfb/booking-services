@@ -1,5 +1,5 @@
+import { ServicesRepository } from '@/domain/application/repositories/services-repository'
 import { Prisma, Service } from '@prisma/client'
-import { ServicesRepository } from '../services-repository'
 import { randomUUID } from 'crypto'
 
 export class InMemoryServicesRepository implements ServicesRepository {

@@ -1,9 +1,9 @@
-import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 import { AuthenticateClientUseCase } from './authenticate-client'
 import { makeClient } from 'test/factories/make-client'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
 import { FakeHasher } from 'test/cryptograpy/fake-hasher'
 import { FakeEncrypter } from 'test/cryptograpy/fake-encrypter'
+import { InMemoryClientsRepository } from 'test/repositories/in-memory-clients-repository'
 
 let inMemoryClientsRepository: InMemoryClientsRepository
 let fakeHasher: FakeHasher

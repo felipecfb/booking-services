@@ -1,4 +1,4 @@
-import { InMemoryServicesRepository } from '../repositories/in-memory/in-memory-services-repository'
+import { InMemoryServicesRepository } from 'test/repositories/in-memory-services-repository'
 import { CreateServiceUseCase } from './create-service'
 
 let servicesRepository: InMemoryServicesRepository

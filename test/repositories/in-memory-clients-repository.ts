@@ -1,4 +1,4 @@
-import { ClientsRepository } from '../clients-repository'
+import { ClientsRepository } from '@/domain/application/repositories/clients-repository'
 import { Client } from '@/domain/enterprise/entities/client'
 
 export class InMemoryClientsRepository implements ClientsRepository {
