@@ -1,22 +1,31 @@
-import { hash } from 'bcryptjs'
 import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
 import { AuthenticateClientUseCase } from './authenticate-client'
 import { makeClient } from 'test/factories/make-client'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
+import { FakeHasher } from 'test/cryptograpy/fake-hasher'
+import { FakeEncrypter } from 'test/cryptograpy/fake-encrypter'
 
 let inMemoryClientsRepository: InMemoryClientsRepository
+let fakeHasher: FakeHasher
+let fakeEncrypter: FakeEncrypter
 let sut: AuthenticateClientUseCase
 
 describe('Authenticate Client Use Case', () => {
   beforeEach(() => {
     inMemoryClientsRepository = new InMemoryClientsRepository()
-    sut = new AuthenticateClientUseCase(inMemoryClientsRepository)
+    fakeHasher = new FakeHasher()
+    fakeEncrypter = new FakeEncrypter()
+    sut = new AuthenticateClientUseCase(
+      inMemoryClientsRepository,
+      fakeHasher,
+      fakeEncrypter,
+    )
   })
 
   it('should be able to authenticate a client', async () => {
     const client = makeClient({
       email: 'johndoe@example.com',
-      password: await hash('123456', 8),
+      password: await fakeHasher.hash('123456'),
     })
 
     inMemoryClientsRepository.create(client)
@@ -35,7 +44,7 @@ describe('Authenticate Client Use Case', () => {
   it('should not be able to authenticate with wrong credentials', async () => {
     const result = await sut.execute({
       email: 'unexist_client@example.com',
-      password: '123456',
+      password: 'unexisting_password',
     })
 
     expect(result.isLeft()).toBe(true)

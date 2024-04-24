@@ -1,7 +1,8 @@
-import { compare } from 'bcryptjs'
 import { ClientsRepository } from '../repositories/clients-repository'
 import { Either, left, right } from '@/core/either'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
+import { HashComparer } from '../cryptograpy/hash-comparer'
+import { Encrypter } from '../cryptograpy/encrypter'
 
 interface AuthenticateClientUseCaseRequest {
   email: string
@@ -16,7 +17,11 @@ type AuthenticateClientUseCaseResponse = Either<
 >
 
 export class AuthenticateClientUseCase {
-  constructor(private clientsRepository: ClientsRepository) {}
+  constructor(
+    private clientsRepository: ClientsRepository,
+    private hashComparer: HashComparer,
+    private encrypter: Encrypter,
+  ) {}
 
   async execute({
     email,
@@ -28,13 +33,18 @@ export class AuthenticateClientUseCase {
       return left(new WrongCredentialsError())
     }
 
-    const isPasswordValid = await compare(password, client.password)
+    const isPasswordValid = await this.hashComparer.compare(
+      password,
+      client.password,
+    )
 
     if (!isPasswordValid) {
       return left(new WrongCredentialsError())
     }
 
-    const accessToken = 'valid-access-token'
+    const accessToken = await this.encrypter.encrypt({
+      sub: client.id.toString(),
+    })
 
     return right({
       accessToken,

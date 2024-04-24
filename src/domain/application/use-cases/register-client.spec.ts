@@ -1,16 +1,18 @@
 import { RegisterClientUseCase } from './register-client'
 
 import { InMemoryClientsRepository } from '../repositories/in-memory/in-memory-clients-repository'
-import { compare } from 'bcryptjs'
 import { ClientAlreadyExistsError } from './errors/client-already-exists-error'
+import { FakeHasher } from 'test/cryptograpy/fake-hasher'
 
 let inMemoryClientsRepository: InMemoryClientsRepository
+let fakeHasher: FakeHasher
 let sut: RegisterClientUseCase
 
 describe('Register Use Case', () => {
   beforeEach(() => {
     inMemoryClientsRepository = new InMemoryClientsRepository()
-    sut = new RegisterClientUseCase(inMemoryClientsRepository)
+    fakeHasher = new FakeHasher()
+    sut = new RegisterClientUseCase(inMemoryClientsRepository, fakeHasher)
   })
 
   it('should be able to register a new client', async () => {
@@ -33,13 +35,10 @@ describe('Register Use Case', () => {
       password: '123456',
     })
 
-    const isPasswordCorrectlyHashed = await compare(
-      '123456',
-      inMemoryClientsRepository.items[0].password,
-    )
+    const hashedPassword = await fakeHasher.hash('123456')
 
     expect(result.isRight()).toBe(true)
-    expect(isPasswordCorrectlyHashed).toBe(true)
+    expect(inMemoryClientsRepository.items[0].password).toEqual(hashedPassword)
   })
 
   it('should not be able to register with same email twice', async () => {
