@@ -1,5 +1,5 @@
-import { Prisma, Service } from '@prisma/client'
+import { Service } from '@/domain/enterprise/entities/service'
 
 export interface ServicesRepository {
-  create(data: Prisma.ServiceCreateInput): Promise<Service>
+  create(service: Service): Promise<Service>
 }

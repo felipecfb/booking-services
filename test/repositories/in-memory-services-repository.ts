@@ -1,20 +1,10 @@
 import { ServicesRepository } from '@/domain/application/repositories/services-repository'
-import { Prisma, Service } from '@prisma/client'
-import { randomUUID } from 'crypto'
+import { Service } from '@/domain/enterprise/entities/service'
 
 export class InMemoryServicesRepository implements ServicesRepository {
   public items: Service[] = []
 
-  async create(data: Prisma.ServiceCreateInput): Promise<Service> {
-    const service = {
-      id: randomUUID(),
-      name: data.name,
-      description: data.description,
-      price: data.price,
-      disponibility: data.disponibility,
-      createdAt: new Date(),
-    }
-
+  async create(service: Service): Promise<Service> {
     this.items.push(service)
 
     return service

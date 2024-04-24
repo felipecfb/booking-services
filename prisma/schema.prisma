@@ -36,7 +36,7 @@ model Service {
   disponibility Boolean
   createdAt     DateTime @default(now())
 
-  user Client @relation(fields: [clientId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
 
   Reservation Reservation[]
 

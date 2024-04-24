@@ -1,31 +1,29 @@
 import { InMemoryServicesRepository } from 'test/repositories/in-memory-services-repository'
 import { CreateServiceUseCase } from './create-service'
+import { makeClient } from 'test/factories/make-client'
 
-let servicesRepository: InMemoryServicesRepository
+let inMemoryServicesRepository: InMemoryServicesRepository
 let sut: CreateServiceUseCase
 
 describe('Create Service Use Case', () => {
   beforeEach(() => {
-    servicesRepository = new InMemoryServicesRepository()
-    sut = new CreateServiceUseCase(servicesRepository)
+    inMemoryServicesRepository = new InMemoryServicesRepository()
+    sut = new CreateServiceUseCase(inMemoryServicesRepository)
   })
 
   it('should be able to create a service', async () => {
-    const response = await sut.execute({
+    const client = makeClient()
+
+    const result = await sut.execute({
+      clientId: client.id.toString(),
       name: 'Service 1',
       description: 'Description 1',
       price: 12000,
     })
 
-    expect(response.service).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        name: 'Service 1',
-        description: 'Description 1',
-        price: 12000,
-        disponibility: true,
-        createdAt: expect.any(Date),
-      }),
-    )
+    expect(result.isRight()).toBeTruthy()
+    expect(result.value).toEqual({
+      service: inMemoryServicesRepository.items[0],
+    })
   })
 })
