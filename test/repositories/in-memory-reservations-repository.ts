@@ -1,8 +1,15 @@
+import { PaginationParams } from '@/core/repositories/pagination-params'
 import { ReservationsRepository } from '@/domain/application/repositories/reservations-repository'
 import { Reservation } from '@/domain/enterprise/entities/reservation'
 
 export class InMemoryReservationsRepository implements ReservationsRepository {
   public items: Reservation[] = []
+
+  async findMany({ page }: PaginationParams): Promise<Reservation[]> {
+    const reservations = this.items.slice((page - 1) * 20, page * 20)
+
+    return reservations
+  }
 
   async confirmReservation(reservationId: string): Promise<Reservation> {
     const reservation = this.items.find(

@@ -41,8 +41,6 @@ describe('Finish Reservation Use Case', () => {
       reservationId: reservation.id.toString(),
     })
 
-    console.log(result.value)
-
     expect(result.isRight()).toBeTruthy()
     expect(result.value).toMatchObject({
       reservation: {
