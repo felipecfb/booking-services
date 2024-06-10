@@ -21,6 +21,16 @@ export class InMemoryServicesRepository implements ServicesRepository {
     return service
   }
 
+  async findBySlug(slug: string): Promise<Service | null> {
+    const service = this.items.find((item) => item.slug.value === slug)
+
+    if (!service) {
+      return null
+    }
+
+    return service
+  }
+
   async create(service: Service): Promise<Service> {
     this.items.push(service)
 
