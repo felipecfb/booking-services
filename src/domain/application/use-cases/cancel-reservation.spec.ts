@@ -2,25 +2,25 @@ import { makeClient } from 'test/factories/make-client'
 import { InMemoryClientsRepository } from 'test/repositories/in-memory-clients-repository'
 import { InMemoryReservationsRepository } from 'test/repositories/in-memory-reservations-repository'
 import { makeService } from 'test/factories/make-service'
-import { ConfirmReservationUseCase } from './confirm-reservation'
+import { CancelReservationUseCase } from './cancel-reservation'
 import { makeReservation } from 'test/factories/make-reservation'
 import { NotAllowedError } from './errors/not-allowed'
 
 let inMemoryReservationsRepository: InMemoryReservationsRepository
 let inMemoryClientsRepository: InMemoryClientsRepository
-let sut: ConfirmReservationUseCase
+let sut: CancelReservationUseCase
 
-describe('Confirm Reservation Use Case', () => {
+describe('Cancel Reservation Use Case', () => {
   beforeEach(() => {
     inMemoryReservationsRepository = new InMemoryReservationsRepository()
     inMemoryClientsRepository = new InMemoryClientsRepository()
-    sut = new ConfirmReservationUseCase(
+    sut = new CancelReservationUseCase(
       inMemoryReservationsRepository,
       inMemoryClientsRepository,
     )
   })
 
-  it('should be able to confirm a reservation', async () => {
+  it('should be able to cancel a reservation', async () => {
     const client = makeClient({ role: 'ADMIN' })
 
     inMemoryClientsRepository.items.push(client)
@@ -41,15 +41,17 @@ describe('Confirm Reservation Use Case', () => {
       reservationId: reservation.id.toString(),
     })
 
+    console.log(result.value)
+
     expect(result.isRight()).toBeTruthy()
     expect(result.value).toMatchObject({
       reservation: {
-        status: 'CONFIRMED',
+        status: 'CANCELED',
       },
     })
   })
 
-  it('should not be able to confirm a reservation if the client is not an admin', async () => {
+  it('should not be able to cancel a reservation if the client is not an admin', async () => {
     const client = makeClient()
 
     inMemoryClientsRepository.items.push(client)

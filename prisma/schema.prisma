@@ -46,7 +46,7 @@ model Service {
 enum ReservationStatus {
   PENDING
   CONFIRMED
-  CANCELLED
+  CANCELED
   FINISHED
 }
 

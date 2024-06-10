@@ -5,19 +5,19 @@ import { Reservation } from '@/domain/enterprise/entities/reservation'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { NotAllowedError } from './errors/not-allowed'
 
-export interface ConfirmReservationRequest {
+export interface CancelReservationRequest {
   clientId: string
   reservationId: string
 }
 
-type ConfirmReservationResponse = Either<
+type CancelReservationResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   {
     reservation: Reservation
   }
 >
 
-export class ConfirmReservationUseCase {
+export class CancelReservationUseCase {
   constructor(
     private reservationsRepository: ReservationsRepository,
     private clientsRepository: ClientsRepository,
@@ -26,7 +26,7 @@ export class ConfirmReservationUseCase {
   async execute({
     clientId,
     reservationId,
-  }: ConfirmReservationRequest): Promise<ConfirmReservationResponse> {
+  }: CancelReservationRequest): Promise<CancelReservationResponse> {
     const client = await this.clientsRepository.findClientById(clientId)
 
     if (!client) {
@@ -44,7 +44,7 @@ export class ConfirmReservationUseCase {
       return left(new ResourceNotFoundError('Reservation not found'))
     }
 
-    reservation.confirm()
+    reservation.cancel()
 
     return right({
       reservation,

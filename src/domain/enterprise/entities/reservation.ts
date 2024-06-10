@@ -5,7 +5,7 @@ import { UniqueEntityID } from '../../../core/entities/unique-entity-id'
 enum ReservationStatus {
   PENDING = 'PENDING',
   CONFIRMED = 'CONFIRMED',
-  CANCELLED = 'CANCELLED',
+  CANCELED = 'CANCELED',
   FINISHED = 'FINISHED',
 }
 
@@ -75,5 +75,13 @@ export class Reservation extends Entity<ReservationProps> {
 
   confirm() {
     this.status = ReservationStatus.CONFIRMED
+  }
+
+  cancel() {
+    this.status = ReservationStatus.CANCELED
+  }
+
+  finish() {
+    this.status = ReservationStatus.FINISHED
   }
 }
