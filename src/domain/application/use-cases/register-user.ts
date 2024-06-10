@@ -53,6 +53,7 @@ export class RegisterUserUseCase {
       email,
       password: passwordHash,
       establishmentId,
+      establishmentRole: establishment.users?.length === 0 ? 'OWNER' : 'MEMBER',
     })
 
     await this.usersRepository.create(user)
