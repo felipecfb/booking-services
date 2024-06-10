@@ -72,4 +72,8 @@ export class Reservation extends Entity<ReservationProps> {
 
     return reservation
   }
+
+  confirm() {
+    this.status = ReservationStatus.CONFIRMED
+  }
 }

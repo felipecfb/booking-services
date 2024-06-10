@@ -1,7 +1,7 @@
 import { InMemoryServicesRepository } from 'test/repositories/in-memory-services-repository'
 import { CreateServiceUseCase } from './create-service'
 import { makeClient } from 'test/factories/make-client'
-import { ClientNotAuthorized } from './errors/client-not-authorized'
+import { NotAllowedError } from './errors/not-allowed'
 import { InMemoryClientsRepository } from 'test/repositories/in-memory-clients-repository'
 
 let inMemoryServicesRepository: InMemoryServicesRepository
@@ -49,6 +49,6 @@ describe('Create Service Use Case', () => {
     })
 
     expect(result.isLeft()).toBeTruthy()
-    expect(result.value).toEqual(new ClientNotAuthorized())
+    expect(result.value).toEqual(new NotAllowedError())
   })
 })

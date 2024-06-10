@@ -3,7 +3,7 @@ import { ServicesRepository } from '../repositories/services-repository'
 import { Service } from '@/domain/enterprise/entities/service'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { ClientsRepository } from '../repositories/clients-repository'
-import { ClientNotAuthorized } from './errors/client-not-authorized'
+import { NotAllowedError } from './errors/not-allowed'
 
 interface CreateServiceUseCaseRequest {
   clientId: string
@@ -13,7 +13,7 @@ interface CreateServiceUseCaseRequest {
 }
 
 type CreateServiceUseCaseResponse = Either<
-  ClientNotAuthorized,
+  NotAllowedError,
   {
     service: Service
   }
@@ -34,7 +34,7 @@ export class CreateServiceUseCase {
     const client = await this.clientsRepository.findClientById(clientId)
 
     if (client?.role === 'REGULAR') {
-      return left(new ClientNotAuthorized())
+      return left(new NotAllowedError())
     }
 
     const service = Service.create({
