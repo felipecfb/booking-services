@@ -8,5 +8,5 @@ export interface UsersRepository {
     params: PaginationParams,
   ): Promise<User[]>
   findUserByEmail(email: string): Promise<User | null>
-  create(User: User): Promise<User>
+  create(user: User): Promise<User>
 }
