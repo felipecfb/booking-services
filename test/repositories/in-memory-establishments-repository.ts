@@ -6,6 +6,18 @@ export class InMemoryEstablishmentsRepository
 {
   public items: Establishment[] = []
 
+  async findEstablishmentById(id: string): Promise<Establishment | null> {
+    const establishment = this.items.find(
+      (establishment) => establishment.id.toString() === id,
+    )
+
+    if (!establishment) {
+      return null
+    }
+
+    return establishment
+  }
+
   async create(establishment: Establishment): Promise<Establishment> {
     this.items.push(establishment)
 

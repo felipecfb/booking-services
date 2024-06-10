@@ -1,34 +1,34 @@
-import { AuthenticateClientUseCase } from './authenticate-client'
-import { makeClient } from 'test/factories/make-client'
+import { AuthenticateUserUseCase } from './authenticate-user'
+import { makeUser } from 'test/factories/make-user'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
 import { FakeHasher } from 'test/cryptograpy/fake-hasher'
 import { FakeEncrypter } from 'test/cryptograpy/fake-encrypter'
-import { InMemoryClientsRepository } from 'test/repositories/in-memory-clients-repository'
+import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repository'
 
-let inMemoryClientsRepository: InMemoryClientsRepository
+let inMemoryUsersRepository: InMemoryUsersRepository
 let fakeHasher: FakeHasher
 let fakeEncrypter: FakeEncrypter
-let sut: AuthenticateClientUseCase
+let sut: AuthenticateUserUseCase
 
-describe('Authenticate Client Use Case', () => {
+describe('Authenticate User Use Case', () => {
   beforeEach(() => {
-    inMemoryClientsRepository = new InMemoryClientsRepository()
+    inMemoryUsersRepository = new InMemoryUsersRepository()
     fakeHasher = new FakeHasher()
     fakeEncrypter = new FakeEncrypter()
-    sut = new AuthenticateClientUseCase(
-      inMemoryClientsRepository,
+    sut = new AuthenticateUserUseCase(
+      inMemoryUsersRepository,
       fakeHasher,
       fakeEncrypter,
     )
   })
 
-  it('should be able to authenticate a client', async () => {
-    const client = makeClient({
+  it('should be able to authenticate a user', async () => {
+    const user = makeUser({
       email: 'johndoe@example.com',
       password: await fakeHasher.hash('123456'),
     })
 
-    inMemoryClientsRepository.create(client)
+    inMemoryUsersRepository.create(user)
 
     const result = await sut.execute({
       email: 'johndoe@example.com',
@@ -43,7 +43,7 @@ describe('Authenticate Client Use Case', () => {
 
   it('should not be able to authenticate with wrong credentials', async () => {
     const result = await sut.execute({
-      email: 'unexist_client@example.com',
+      email: 'unexist_user@example.com',
       password: 'unexisting_password',
     })
 

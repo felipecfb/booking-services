@@ -1,24 +1,24 @@
-import { ClientsRepository } from '../repositories/clients-repository'
 import { Either, left, right } from '@/core/either'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
 import { HashComparer } from '../cryptograpy/hash-comparer'
 import { Encrypter } from '../cryptograpy/encrypter'
+import { UsersRepository } from '../repositories/users-repository'
 
-interface AuthenticateClientUseCaseRequest {
+interface AuthenticateUserUseCaseRequest {
   email: string
   password: string
 }
 
-type AuthenticateClientUseCaseResponse = Either<
+type AuthenticateUserUseCaseResponse = Either<
   WrongCredentialsError,
   {
     accessToken: string
   }
 >
 
-export class AuthenticateClientUseCase {
+export class AuthenticateUserUseCase {
   constructor(
-    private clientsRepository: ClientsRepository,
+    private usersRepository: UsersRepository,
     private hashComparer: HashComparer,
     private encrypter: Encrypter,
   ) {}
@@ -26,16 +26,16 @@ export class AuthenticateClientUseCase {
   async execute({
     email,
     password,
-  }: AuthenticateClientUseCaseRequest): Promise<AuthenticateClientUseCaseResponse> {
-    const client = await this.clientsRepository.findClientByEmail(email)
+  }: AuthenticateUserUseCaseRequest): Promise<AuthenticateUserUseCaseResponse> {
+    const user = await this.usersRepository.findUserByEmail(email)
 
-    if (!client) {
+    if (!user) {
       return left(new WrongCredentialsError())
     }
 
     const isPasswordValid = await this.hashComparer.compare(
       password,
-      client.password,
+      user.password,
     )
 
     if (!isPasswordValid) {
@@ -43,7 +43,7 @@ export class AuthenticateClientUseCase {
     }
 
     const accessToken = await this.encrypter.encrypt({
-      sub: client.id.toString(),
+      sub: user.id.toString(),
     })
 
     return right({

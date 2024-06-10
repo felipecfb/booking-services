@@ -1,33 +1,33 @@
-import { GetClientProfileUseCase } from './get-client-profile'
-import { makeClient } from 'test/factories/make-client'
+import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repository'
+import { GetUserProfileUseCase } from './get-user-profile'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
-import { InMemoryClientsRepository } from 'test/repositories/in-memory-clients-repository'
+import { makeUser } from 'test/factories/make-user'
 
-let inMemoryClientsRepository: InMemoryClientsRepository
-let sut: GetClientProfileUseCase
+let inMemoryUsersRepository: InMemoryUsersRepository
+let sut: GetUserProfileUseCase
 
 describe('Get Client Profile Use Case', () => {
   beforeEach(() => {
-    inMemoryClientsRepository = new InMemoryClientsRepository()
-    sut = new GetClientProfileUseCase(inMemoryClientsRepository)
+    inMemoryUsersRepository = new InMemoryUsersRepository()
+    sut = new GetUserProfileUseCase(inMemoryUsersRepository)
   })
 
   it('should return a client profile', async () => {
-    const client = makeClient()
+    const user = makeUser()
 
-    await inMemoryClientsRepository.create(client)
+    await inMemoryUsersRepository.create(user)
 
-    const result = await sut.execute({ clientId: client.id.toString() })
+    const result = await sut.execute({ userId: user.id.toString() })
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toEqual({
-      client: inMemoryClientsRepository.items[0],
+      user: inMemoryUsersRepository.items[0],
     })
   })
 
   it('should throw if client is not found', async () => {
     const result = await sut.execute({
-      clientId: 'non-existing-id',
+      userId: 'non-existing-id',
     })
 
     expect(result.isLeft()).toBe(true)
