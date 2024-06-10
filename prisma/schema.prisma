@@ -8,60 +8,33 @@ datasource db {
 }
 
 enum Role {
-  REGULAR
-  PREMIUM
+  MEMBER
   ADMIN
+  OWNER
 }
 
-model Client {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  password  String
-  role      Role     @default(REGULAR)
-  createdAt DateTime @default(now())
+model User {
+  id                String   @id @default(uuid())
+  name              String
+  email             String   @unique
+  password          String
+  establishmentId   String   @map("establishment_id")
+  establishmentRole Role?    @default(MEMBER) @map("establishment_role")
+  createdAt         DateTime @default(now())
 
-  Service     Service[]
-  Reservation Reservation[]
+  establishment Establishment @relation(fields: [establishmentId], references: [id])
 
-  @@map("clients")
+  @@map("users")
 }
 
-model Service {
-  id            String   @id @default(cuid())
-  clientId      String   @map("client_id")
-  name          String
-  description   String
-  price         Int // Price in cents
-  disponibility Boolean
-  createdAt     DateTime @default(now())
+model Establishment {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String
+  createdAt   DateTime @default(now())
 
-  client Client @relation(fields: [clientId], references: [id])
+  users User[]
 
-  Reservation Reservation[]
-
-  @@map("services")
-}
-
-enum ReservationStatus {
-  PENDING
-  CONFIRMED
-  CANCELED
-  FINISHED
-}
-
-model Reservation {
-  id        String            @id @default(cuid())
-  clientId  String            @map("client_id")
-  serviceId String            @map("service_id")
-  startDate DateTime
-  endDate   DateTime
-  status    ReservationStatus @default(PENDING)
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-
-  service Service @relation(fields: [serviceId], references: [id])
-  client  Client  @relation(fields: [clientId], references: [id])
-
-  @@map("reservations")
+  @@map("establishments")
 }

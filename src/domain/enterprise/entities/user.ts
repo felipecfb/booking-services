@@ -2,15 +2,16 @@ import { Optional } from '@/core/types/optional'
 import { Entity } from '../../../core/entities/entity'
 import { UniqueEntityID } from '../../../core/entities/unique-entity-id'
 
-export interface ClientProps {
+export interface UserProps {
   name: string
   email: string
   password: string
-  role: string
+  establishmentId: string
+  establishmentRole?: string
   createdAt: Date
 }
 
-export class Client extends Entity<ClientProps> {
+export class User extends Entity<UserProps> {
   get name() {
     return this.props.name
   }
@@ -23,8 +24,12 @@ export class Client extends Entity<ClientProps> {
     return this.props.password
   }
 
-  get role() {
-    return this.props.role
+  get establishmentId() {
+    return this.props.establishmentId
+  }
+
+  get establishmentRole() {
+    return this.props.establishmentRole
   }
 
   get createdAt() {
@@ -32,13 +37,13 @@ export class Client extends Entity<ClientProps> {
   }
 
   static create(
-    props: Optional<ClientProps, 'role' | 'createdAt'>,
+    props: Optional<UserProps, 'establishmentRole' | 'createdAt'>,
     id?: UniqueEntityID,
   ) {
-    const client = new Client(
+    const client = new User(
       {
         ...props,
-        role: props.role ?? 'REGULAR',
+        establishmentRole: props.establishmentRole ?? 'MEMBER',
         createdAt: props.createdAt ?? new Date(),
       },
       id,
