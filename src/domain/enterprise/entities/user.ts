@@ -40,7 +40,7 @@ export class User extends Entity<UserProps> {
     props: Optional<UserProps, 'establishmentRole' | 'createdAt'>,
     id?: UniqueEntityID,
   ) {
-    const client = new User(
+    const user = new User(
       {
         ...props,
         establishmentRole: props.establishmentRole ?? 'MEMBER',
@@ -49,6 +49,6 @@ export class User extends Entity<UserProps> {
       id,
     )
 
-    return client
+    return user
   }
 }
