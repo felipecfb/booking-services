@@ -9,12 +9,19 @@ export interface EstablishmentProps {
   slug: Slug
   description: string
   createdAt: Date
+  updatedAt?: Date
   users?: User[]
 }
 
 export class Establishment extends Entity<EstablishmentProps> {
   get name() {
     return this.props.name
+  }
+
+  set name(name: string) {
+    this.props.name = name
+    this.props.slug = Slug.createFromText(name)
+    this.touch()
   }
 
   get slug() {
@@ -25,12 +32,25 @@ export class Establishment extends Entity<EstablishmentProps> {
     return this.props.description
   }
 
+  set description(description: string) {
+    this.props.description = description
+    this.touch()
+  }
+
   get users() {
     return this.props.users
   }
 
   get createdAt() {
     return this.props.createdAt
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt
+  }
+
+  private touch() {
+    this.props.updatedAt = new Date()
   }
 
   static create(
