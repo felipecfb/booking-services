@@ -6,10 +6,12 @@ export class InMemoryEstablishmentsRepository
 {
   public items: Establishment[] = []
 
-  async findEstablishmentByDocument(
-    document: string,
+  async findEstablishmentByOwnerId(
+    ownerId: string,
   ): Promise<Establishment | null> {
-    const establishment = this.items.find((item) => item.document === document)
+    const establishment = this.items.find(
+      (item) => item.ownerId.toString() === ownerId,
+    )
 
     if (!establishment) {
       return null
@@ -18,8 +20,10 @@ export class InMemoryEstablishmentsRepository
     return establishment
   }
 
-  async findBySlug(slug: string): Promise<Establishment | null> {
-    const establishment = this.items.find((item) => item.slug.value === slug)
+  async findEstablishmentByDocument(
+    document: string,
+  ): Promise<Establishment | null> {
+    const establishment = this.items.find((item) => item.document === document)
 
     if (!establishment) {
       return null

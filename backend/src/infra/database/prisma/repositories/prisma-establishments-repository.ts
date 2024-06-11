@@ -10,12 +10,12 @@ export class PrismaEstablishmentsRepository
 {
   constructor(private prisma: PrismaService) {}
 
-  async findEstablishmentByDocument(
-    document: string,
+  async findEstablishmentByOwnerId(
+    ownerId: string,
   ): Promise<Establishment | null> {
-    const establishment = await this.prisma.establishment.findUnique({
+    const establishment = await this.prisma.establishment.findFirst({
       where: {
-        document,
+        ownerId,
       },
     })
 
@@ -26,10 +26,12 @@ export class PrismaEstablishmentsRepository
     return PrismaEstablishmentsMapper.toDomain(establishment)
   }
 
-  async findBySlug(slug: string): Promise<Establishment | null> {
-    const establishment = await this.prisma.establishment.findFirst({
+  async findEstablishmentByDocument(
+    document: string,
+  ): Promise<Establishment | null> {
+    const establishment = await this.prisma.establishment.findUnique({
       where: {
-        slug,
+        document,
       },
     })
 
@@ -61,6 +63,16 @@ export class PrismaEstablishmentsRepository
 
     await this.prisma.establishment.create({
       data,
+    })
+
+    await this.prisma.user.update({
+      where: {
+        id: establishment.ownerId.toString(),
+      },
+      data: {
+        establishmentId: establishment.id.toString(),
+        role: 'OWNER',
+      },
     })
 
     return establishment

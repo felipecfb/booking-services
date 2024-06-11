@@ -7,6 +7,7 @@ import { User } from './user'
 export interface EstablishmentProps {
   name: string
   slug: Slug
+  ownerId: string
   description: string
   document: string
   createdAt: Date
@@ -27,6 +28,10 @@ export class Establishment extends Entity<EstablishmentProps> {
 
   get slug() {
     return this.props.slug
+  }
+
+  get ownerId() {
+    return this.props.ownerId
   }
 
   get description() {

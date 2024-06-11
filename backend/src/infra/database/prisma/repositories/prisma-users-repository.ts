@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { PrismaUsersMapper } from '../mappers/prisma-users-mapper'
 import { UsersRepository } from '@/domain/application/repositories/users-repository'
-import { PaginationParams } from '@/core/repositories/pagination-params'
 import { User } from '@/domain/enterprise/entities/user'
+import { Role } from '@prisma/client'
 
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
@@ -21,21 +21,6 @@ export class PrismaUsersRepository implements UsersRepository {
     }
 
     return PrismaUsersMapper.toDomain(user)
-  }
-
-  async findUsersByEstablishmentId(
-    establishmentId: string,
-    { page }: PaginationParams,
-  ): Promise<User[]> {
-    const users = await this.prisma.user.findMany({
-      where: {
-        establishmentId,
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
-
-    return users.map(PrismaUsersMapper.toDomain)
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
@@ -57,6 +42,17 @@ export class PrismaUsersRepository implements UsersRepository {
 
     await this.prisma.user.create({
       data,
+    })
+  }
+
+  async updateRole(user: User, role: string): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id: user.id.toString(),
+      },
+      data: {
+        role: role as Role,
+      },
     })
   }
 }

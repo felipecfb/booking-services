@@ -10,6 +10,7 @@ export class PrismaEstablishmentsMapper {
         name: raw.name,
         description: raw.description,
         slug: Slug.create(raw.slug),
+        ownerId: raw.ownerId,
         document: raw.document,
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
@@ -24,9 +25,10 @@ export class PrismaEstablishmentsMapper {
     return {
       id: establishment.id.toString(),
       name: establishment.name,
+      slug: establishment.slug.value,
+      ownerId: establishment.ownerId,
       description: establishment.description,
       document: establishment.document,
-      slug: establishment.slug.value,
       createdAt: establishment.createdAt,
       updatedAt: establishment.updatedAt,
     }

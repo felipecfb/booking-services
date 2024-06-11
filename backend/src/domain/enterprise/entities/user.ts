@@ -32,6 +32,10 @@ export class User extends Entity<UserProps> {
     return this.props.role
   }
 
+  set role(role: string | null) {
+    this.props.role = role
+  }
+
   get createdAt() {
     return this.props.createdAt
   }

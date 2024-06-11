@@ -31,6 +31,7 @@ model Establishment {
   id          String   @id @default(uuid())
   name        String
   slug        String
+  ownerId     String   @unique
   description String
   document    String   @unique
   createdAt   DateTime @default(now())
