@@ -5,6 +5,7 @@ import { HashGenerator } from '../cryptograpy/hash-generator'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { EstablishmentsRepository } from '../repositories/establishments-repository'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface RegisterUserUseCaseRequest {
   name: string
@@ -20,6 +21,7 @@ type RegisterUserUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class RegisterUserUseCase {
   constructor(
     private establishmentsRepository: EstablishmentsRepository,

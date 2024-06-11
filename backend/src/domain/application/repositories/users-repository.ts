@@ -1,12 +1,13 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { User } from '@/domain/enterprise/entities/user'
 
-export interface UsersRepository {
-  findUserById(id: string): Promise<User | null>
-  findUsersByEstablishmentId(
+export abstract class UsersRepository {
+  abstract findUserById(id: string): Promise<User | null>
+  abstract findUsersByEstablishmentId(
     establishmentId: string,
     params: PaginationParams,
   ): Promise<User[]>
-  findUserByEmail(email: string): Promise<User | null>
-  create(user: User): Promise<void>
+
+  abstract findUserByEmail(email: string): Promise<User | null>
+  abstract create(user: User): Promise<void>
 }
