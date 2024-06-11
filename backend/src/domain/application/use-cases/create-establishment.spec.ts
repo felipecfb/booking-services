@@ -1,5 +1,6 @@
 import { InMemoryEstablishmentsRepository } from 'test/repositories/in-memory-establishments-repository'
 import { CreateEstablishmentUseCase } from './create-establishment'
+import { EstablishmentAlreadyExistsError } from './errors/establishment-already-exists-error'
 
 let inMemoryEstablishmentsRepository: InMemoryEstablishmentsRepository
 let sut: CreateEstablishmentUseCase
@@ -17,8 +18,23 @@ describe('Create Establishment Use Case', () => {
     })
 
     expect(result.isRight()).toBeTruthy()
-    expect(inMemoryEstablishmentsRepository.items[0]).toEqual(
-      result.value?.establishment,
-    )
+    expect(result.value).toEqual({
+      establishment: inMemoryEstablishmentsRepository.items[0],
+    })
+  })
+
+  it('should not be able to create a establishment with same name', async () => {
+    await sut.execute({
+      name: 'Establishment 1',
+      description: 'Establishment description',
+    })
+
+    const result = await sut.execute({
+      name: 'Establishment 1',
+      description: 'Establishment description',
+    })
+
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.value).toBeInstanceOf(EstablishmentAlreadyExistsError)
   })
 })
