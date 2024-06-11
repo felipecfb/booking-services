@@ -4,14 +4,12 @@ import { User } from '@/domain/enterprise/entities/user'
 import { HashGenerator } from '../cryptograpy/hash-generator'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { EstablishmentsRepository } from '../repositories/establishments-repository'
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
 
 interface RegisterUserUseCaseRequest {
   name: string
   email: string
   password: string
-  establishmentId: string
 }
 
 type RegisterUserUseCaseResponse = Either<
@@ -33,15 +31,7 @@ export class RegisterUserUseCase {
     name,
     email,
     password,
-    establishmentId,
   }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    const establishment =
-      await this.establishmentsRepository.findEstablishmentById(establishmentId)
-
-    if (!establishment) {
-      return left(new ResourceNotFoundError('Establishment not found'))
-    }
-
     const userWithSameEmail = await this.usersRepository.findUserByEmail(email)
 
     if (userWithSameEmail) {
@@ -54,8 +44,6 @@ export class RegisterUserUseCase {
       name,
       email,
       password: passwordHash,
-      establishmentId,
-      establishmentRole: establishment.users?.length === 0 ? 'OWNER' : 'MEMBER',
     })
 
     await this.usersRepository.create(user)

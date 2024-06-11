@@ -9,8 +9,8 @@ export class PrismaUsersMapper {
         name: raw.name,
         email: raw.email,
         password: raw.password,
-        establishmentId: raw.establishmentId,
-        establishmentRole: raw.establishmentRole || 'MEMBER',
+        establishmentId: raw.establishmentId ?? null,
+        role: raw.role ?? null,
         createdAt: raw.createdAt,
       },
       new UniqueEntityID(raw.id),
@@ -24,7 +24,7 @@ export class PrismaUsersMapper {
       email: user.email,
       password: user.password,
       establishmentId: user.establishmentId,
-      establishmentRole: user.establishmentRole as Role,
+      role: user.role as Role,
       createdAt: user.createdAt,
     }
   }

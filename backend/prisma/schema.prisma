@@ -13,6 +13,20 @@ enum Role {
   OWNER
 }
 
+model User {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  password        String
+  establishmentId String?
+  role            Role?
+  createdAt       DateTime @default(now())
+
+  Establishment Establishment? @relation(fields: [establishmentId], references: [id])
+
+  @@map("users")
+}
+
 model Establishment {
   id          String   @id @default(uuid())
   name        String
@@ -25,18 +39,4 @@ model Establishment {
   users User[]
 
   @@map("establishments")
-}
-
-model User {
-  id                String   @id @default(uuid())
-  name              String
-  email             String   @unique
-  password          String
-  establishmentId   String   @map("establishment_id")
-  establishmentRole Role?    @default(MEMBER) @map("establishment_role")
-  createdAt         DateTime @default(now())
-
-  establishment Establishment @relation(fields: [establishmentId], references: [id])
-
-  @@map("users")
 }

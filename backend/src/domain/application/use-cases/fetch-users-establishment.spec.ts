@@ -15,21 +15,21 @@ describe('Fetch Users Establishment Use Case', () => {
     await inMemoryUsersRepository.create(
       makeUser({
         establishmentId: 'establishment-id',
-        establishmentRole: 'OWNER',
+        role: 'OWNER',
       }),
     )
 
     await inMemoryUsersRepository.create(
       makeUser({
         establishmentId: 'establishment-id',
-        establishmentRole: 'ADMIN',
+        role: 'ADMIN',
       }),
     )
 
     await inMemoryUsersRepository.create(
       makeUser({
         establishmentId: 'establishment-id',
-        establishmentRole: 'MEMBER',
+        role: 'MEMBER',
       }),
     )
 
@@ -47,7 +47,7 @@ describe('Fetch Users Establishment Use Case', () => {
       await inMemoryUsersRepository.create(
         makeUser({
           establishmentId: 'establishment-id',
-          establishmentRole: 'MEMBER',
+          role: 'MEMBER',
         }),
       )
     }

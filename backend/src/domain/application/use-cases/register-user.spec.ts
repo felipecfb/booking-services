@@ -4,7 +4,6 @@ import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repos
 import { InMemoryEstablishmentsRepository } from 'test/repositories/in-memory-establishments-repository'
 import { makeEstablishment } from 'test/factories/make-establishment'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
 let inMemoryEstablishmentsRepository: InMemoryEstablishmentsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
@@ -32,7 +31,6 @@ describe('Register Use Case', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      establishmentId: establishment.id.toString(),
     })
 
     expect(result.isRight()).toBeTruthy()
@@ -50,7 +48,6 @@ describe('Register Use Case', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
-      establishmentId: establishment.id.toString(),
     })
 
     const hashedPassword = await fakeHasher.hash('123456')
@@ -70,31 +67,15 @@ describe('Register Use Case', () => {
       name: 'John Doe',
       email,
       password: '123456',
-      establishmentId: establishment.id.toString(),
     })
 
     const result = await sut.execute({
       name: 'John Doe',
       email,
       password: '123456',
-      establishmentId: establishment.id.toString(),
     })
 
     expect(result.isLeft()).toBeTruthy()
     expect(result.value).toEqual(new UserAlreadyExistsError(email))
-  })
-
-  it('should not be able to register with non-existing establishment', async () => {
-    const result = await sut.execute({
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      password: '123456',
-      establishmentId: 'non-existing-establishment-id',
-    })
-
-    expect(result.isLeft()).toBeTruthy()
-    expect(result.value).toEqual(
-      new ResourceNotFoundError('Establishment not found'),
-    )
   })
 })

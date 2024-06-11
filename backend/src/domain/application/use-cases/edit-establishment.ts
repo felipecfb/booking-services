@@ -40,10 +40,7 @@ export class EditEstablishmentUseCase {
 
     const user = await this.usersRepository.findUserById(userId)
 
-    if (
-      user?.establishmentId !== establishmentId ||
-      user.establishmentRole === 'MEMBER'
-    ) {
+    if (user?.establishmentId !== establishmentId || user.role === 'MEMBER') {
       return left(new NotAllowedError())
     }
 

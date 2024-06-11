@@ -34,7 +34,7 @@ describe('Edit Establishment Use Case', () => {
     const newUser = makeUser(
       {
         establishmentId: 'establishment-1',
-        establishmentRole: 'OWNER',
+        role: 'OWNER',
       },
       new UniqueEntityID('user-1'),
     )
@@ -68,7 +68,7 @@ describe('Edit Establishment Use Case', () => {
     const newUser = makeUser(
       {
         establishmentId: 'establishment-1',
-        establishmentRole: 'MEMBER',
+        role: 'MEMBER',
       },
       new UniqueEntityID('user-1'),
     )

@@ -6,8 +6,8 @@ export interface UserProps {
   name: string
   email: string
   password: string
-  establishmentId: string
-  establishmentRole?: string
+  establishmentId: string | null
+  role: string | null
   createdAt: Date
 }
 
@@ -28,8 +28,8 @@ export class User extends Entity<UserProps> {
     return this.props.establishmentId
   }
 
-  get establishmentRole() {
-    return this.props.establishmentRole
+  get role() {
+    return this.props.role
   }
 
   get createdAt() {
@@ -37,13 +37,14 @@ export class User extends Entity<UserProps> {
   }
 
   static create(
-    props: Optional<UserProps, 'establishmentRole' | 'createdAt'>,
+    props: Optional<UserProps, 'establishmentId' | 'role' | 'createdAt'>,
     id?: UniqueEntityID,
   ) {
     const user = new User(
       {
         ...props,
-        establishmentRole: props.establishmentRole ?? 'MEMBER',
+        establishmentId: props.establishmentId ?? null,
+        role: props.role ?? null,
         createdAt: props.createdAt ?? new Date(),
       },
       id,

@@ -4,7 +4,6 @@ import {
   ConflictException,
   Controller,
   HttpCode,
-  Param,
   Post,
 } from '@nestjs/common'
 import { z } from 'zod'
@@ -23,24 +22,20 @@ const bodyValidationPipe = new ZodValidationPipe(registerUserBodySchema)
 
 type RegisterUserBodySchema = z.infer<typeof registerUserBodySchema>
 
-@Controller('establishments/:establishmentId/users')
+@Controller('/accounts')
 @Public()
 export class RegisterUserController {
   constructor(private registerUser: RegisterUserUseCase) {}
 
   @Post()
   @HttpCode(201)
-  async handle(
-    @Body(bodyValidationPipe) body: RegisterUserBodySchema,
-    @Param('establishmentId') establishmentId: string,
-  ) {
+  async handle(@Body(bodyValidationPipe) body: RegisterUserBodySchema) {
     const { name, email, password } = body
 
     const result = await this.registerUser.execute({
       name,
       email,
       password,
-      establishmentId,
     })
 
     if (result.isLeft()) {
