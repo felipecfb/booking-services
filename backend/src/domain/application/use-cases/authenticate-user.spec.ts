@@ -44,7 +44,7 @@ describe('Authenticate User Use Case', () => {
   it('should not be able to authenticate with wrong credentials', async () => {
     const result = await sut.execute({
       email: 'unexist_user@example.com',
-      password: 'unexisting_password',
+      password: 'unexist_password',
     })
 
     expect(result.isLeft()).toBe(true)
