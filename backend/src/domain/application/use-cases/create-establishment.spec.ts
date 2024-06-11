@@ -15,6 +15,7 @@ describe('Create Establishment Use Case', () => {
     const result = await sut.execute({
       name: 'Establishment 1',
       description: 'Establishment description',
+      document: '12345678901234',
     })
 
     expect(result.isRight()).toBeTruthy()
@@ -23,15 +24,17 @@ describe('Create Establishment Use Case', () => {
     })
   })
 
-  it('should not be able to create a establishment with same name', async () => {
+  it('should not be able to create a establishment with same document', async () => {
     await sut.execute({
       name: 'Establishment 1',
       description: 'Establishment description',
+      document: '12345678901234',
     })
 
     const result = await sut.execute({
       name: 'Establishment 1',
       description: 'Establishment description',
+      document: '12345678901234',
     })
 
     expect(result.isLeft()).toBeTruthy()

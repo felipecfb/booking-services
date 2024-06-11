@@ -8,6 +8,7 @@ export interface EstablishmentProps {
   name: string
   slug: Slug
   description: string
+  document: string
   createdAt: Date
   updatedAt?: Date
   users?: User[]
@@ -35,6 +36,10 @@ export class Establishment extends Entity<EstablishmentProps> {
   set description(description: string) {
     this.props.description = description
     this.touch()
+  }
+
+  get document() {
+    return this.props.document
   }
 
   get users() {

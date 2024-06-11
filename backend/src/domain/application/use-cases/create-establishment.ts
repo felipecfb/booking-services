@@ -3,11 +3,11 @@ import { Establishment } from '@/domain/enterprise/entities/establishment'
 import { EstablishmentsRepository } from '../repositories/establishments-repository'
 import { Injectable } from '@nestjs/common'
 import { EstablishmentAlreadyExistsError } from './errors/establishment-already-exists-error'
-import { Slug } from '@/domain/enterprise/entities/value-objects/slug'
 
 interface CreateEstablishmentUseCaseRequest {
   name: string
   description: string
+  document: string
 }
 
 type CreateEstablishmentUseCaseResponse = Either<
@@ -24,11 +24,10 @@ export class CreateEstablishmentUseCase {
   async execute({
     name,
     description,
+    document,
   }: CreateEstablishmentUseCaseRequest): Promise<CreateEstablishmentUseCaseResponse> {
     const establishmentAlreadyExists =
-      await this.establishmentsRepository.findBySlug(
-        Slug.createFromText(name).value,
-      )
+      await this.establishmentsRepository.findEstablishmentByDocument(document)
 
     if (establishmentAlreadyExists) {
       return left(new EstablishmentAlreadyExistsError())
@@ -37,6 +36,7 @@ export class CreateEstablishmentUseCase {
     const establishment = Establishment.create({
       name,
       description,
+      document,
     })
 
     await this.establishmentsRepository.create(establishment)

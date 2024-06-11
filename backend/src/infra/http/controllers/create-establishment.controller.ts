@@ -16,6 +16,7 @@ import { EstablishmentAlreadyExistsError } from '@/domain/application/use-cases/
 const createEstablishmentBodySchema = z.object({
   name: z.string().min(4),
   description: z.string().min(10),
+  document: z.string().length(14),
 })
 
 type CreateEstablishmentBodySchema = z.infer<
@@ -31,11 +32,12 @@ export class CreateEstablishmentController {
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createEstablishmentBodySchema))
   async handle(@Body() body: CreateEstablishmentBodySchema) {
-    const { name, description } = body
+    const { name, description, document } = body
 
     const result = await this.createEstablishment.execute({
       name,
       description,
+      document,
     })
 
     if (result.isLeft()) {
