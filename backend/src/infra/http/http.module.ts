@@ -9,6 +9,8 @@ import { RegisterUserUseCase } from '@/domain/application/use-cases/register-use
 import { CryptographyModule } from '../cryptography/cryptography.module'
 import { AuthenticateController } from './controllers/authenticate.controller'
 import { AuthenticateUserUseCase } from '@/domain/application/use-cases/authenticate-user'
+import { GetProfileController } from './controllers/get-profile.controller'
+import { GetUserProfileUseCase } from '@/domain/application/use-cases/get-user-profile'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -16,11 +18,13 @@ import { AuthenticateUserUseCase } from '@/domain/application/use-cases/authenti
     CreateEstablishmentController,
     RegisterUserController,
     AuthenticateController,
+    GetProfileController,
   ],
   providers: [
     CreateEstablishmentUseCase,
     RegisterUserUseCase,
     AuthenticateUserUseCase,
+    GetUserProfileUseCase,
   ],
 })
 export class HttpModule {}

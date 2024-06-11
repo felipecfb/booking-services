@@ -38,6 +38,8 @@ export class CreateEstablishmentController {
     const { name, description, document } = body
     const ownerId = user.sub
 
+    console.log('user', user)
+
     const result = await this.createEstablishment.execute({
       name,
       description,
