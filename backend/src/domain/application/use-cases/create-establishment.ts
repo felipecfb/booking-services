@@ -1,6 +1,7 @@
 import { Either, right } from '@/core/either'
 import { Establishment } from '@/domain/enterprise/entities/establishment'
 import { EstablishmentsRepository } from '../repositories/establishments-repository'
+import { Injectable } from '@nestjs/common'
 
 interface CreateEstablishmentUseCaseRequest {
   name: string
@@ -14,6 +15,7 @@ type CreateEstablishmentUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class CreateEstablishmentUseCase {
   constructor(private establishmentsRepository: EstablishmentsRepository) {}
 
