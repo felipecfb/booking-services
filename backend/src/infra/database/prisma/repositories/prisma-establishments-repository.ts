@@ -9,6 +9,22 @@ export class PrismaEstablishmentsRepository
   implements EstablishmentsRepository
 {
   constructor(private prisma: PrismaService) {}
+  async findBySlug(slug: string): Promise<Establishment | null> {
+    console.log(slug)
+
+    const establishment = await this.prisma.establishment.findUnique({
+      where: {
+        slug,
+      },
+    })
+
+    if (!establishment) {
+      return null
+    }
+
+    return PrismaEstablishmentsMapper.toDomain(establishment)
+  }
+
   async findEstablishmentById(
     establishmentId: string,
   ): Promise<Establishment | null> {

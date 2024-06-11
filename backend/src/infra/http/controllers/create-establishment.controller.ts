@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   HttpCode,
   Post,
@@ -10,6 +11,7 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { Public } from '@/infra/auth/public'
 import { CreateEstablishmentUseCase } from '@/domain/application/use-cases/create-establishment'
+import { EstablishmentAlreadyExistsError } from '@/domain/application/use-cases/errors/establishment-already-exists-error'
 
 const createEstablishmentBodySchema = z.object({
   name: z.string().min(4),
@@ -37,15 +39,14 @@ export class CreateEstablishmentController {
     })
 
     if (result.isLeft()) {
-      throw new BadRequestException()
-    }
+      const error = result.value
 
-    const establishment = result.value
-
-    console.log(establishment)
-
-    return {
-      establishment,
+      switch (error.constructor) {
+        case EstablishmentAlreadyExistsError:
+          throw new ConflictException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
   }
 }

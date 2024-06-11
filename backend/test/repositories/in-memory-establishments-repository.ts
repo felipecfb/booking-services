@@ -6,6 +6,16 @@ export class InMemoryEstablishmentsRepository
 {
   public items: Establishment[] = []
 
+  async findBySlug(slug: string): Promise<Establishment | null> {
+    const establishment = this.items.find((item) => item.slug.value === slug)
+
+    if (!establishment) {
+      return null
+    }
+
+    return establishment
+  }
+
   async findEstablishmentById(id: string): Promise<Establishment | null> {
     const establishment = this.items.find(
       (establishment) => establishment.id.toString() === id,
