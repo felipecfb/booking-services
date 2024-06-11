@@ -13,5 +13,6 @@ export abstract class EstablishmentsRepository {
     establishmentId: string,
   ): Promise<Establishment | null>
 
+  abstract save(establishment: Establishment): Promise<void>
   abstract create(establishment: Establishment): Promise<Establishment>
 }

@@ -28,6 +28,10 @@ export class User extends Entity<UserProps> {
     return this.props.establishmentId
   }
 
+  set establishmentId(establishmentId: string | null) {
+    this.props.establishmentId = establishmentId
+  }
+
   get role() {
     return this.props.role
   }

@@ -2,7 +2,6 @@ import { InMemoryEstablishmentsRepository } from 'test/repositories/in-memory-es
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repository'
 import { EditEstablishmentUseCase } from './edit-establishment'
 import { makeEstablishment } from 'test/factories/make-establishment'
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeUser } from 'test/factories/make-user'
 import { NotAllowedError } from './errors/not-allowed'
 
@@ -20,69 +19,65 @@ describe('Edit Establishment Use Case', () => {
     )
   })
 
-  it('should be able to edit a establishment', async () => {
-    const newEstablishment = makeEstablishment(
-      {
-        name: 'Old Establishment',
-        description: 'Old establishment description',
-      },
-      new UniqueEntityID('establishment-1'),
-    )
-
-    await inMemoryEstablishmentsRepository.create(newEstablishment)
-
-    const newUser = makeUser(
-      {
-        establishmentId: 'establishment-1',
-        role: 'OWNER',
-      },
-      new UniqueEntityID('user-1'),
-    )
+  it('should be able to edit an establishment', async () => {
+    const newUser = makeUser()
 
     await inMemoryUsersRepository.create(newUser)
 
-    await sut.execute({
-      establishmentId: 'establishment-1',
-      userId: 'user-1',
-      name: 'New Establishment',
-      description: 'New establishment description',
+    const establishment = makeEstablishment({
+      ownerId: newUser.id.toString(),
     })
 
-    expect(inMemoryEstablishmentsRepository.items[0]).toMatchObject({
-      name: 'New Establishment',
-      description: 'New establishment description',
+    await inMemoryEstablishmentsRepository.create(establishment)
+
+    inMemoryUsersRepository.items[0].establishmentId =
+      establishment.id.toString()
+
+    const response = await sut.execute({
+      establishmentId: establishment.id.toString(),
+      userId: newUser.id.toString(),
+      name: 'New Name',
+      description: 'New Description',
+    })
+
+    expect(response.isRight()).toBeTruthy()
+    expect(response.value).toMatchObject({
+      establishment: {
+        name: 'New Name',
+        description: 'New Description',
+      },
     })
   })
 
-  it('should not be able to edit a establishment if the user is member', async () => {
-    const newEstablishment = makeEstablishment(
-      {
-        name: 'Old Establishment',
-        description: 'Old establishment description',
-      },
-      new UniqueEntityID('establishment-1'),
-    )
+  it('should not be able to edit an establishment if user as a member', async () => {
+    const owner = makeUser()
 
-    await inMemoryEstablishmentsRepository.create(newEstablishment)
+    await inMemoryUsersRepository.create(owner)
 
-    const newUser = makeUser(
-      {
-        establishmentId: 'establishment-1',
-        role: 'MEMBER',
-      },
-      new UniqueEntityID('user-1'),
-    )
-
-    await inMemoryUsersRepository.create(newUser)
-
-    const result = await sut.execute({
-      establishmentId: 'establishment-1',
-      userId: 'user-1',
-      name: 'New Establishment',
-      description: 'New establishment description',
+    const establishment = makeEstablishment({
+      ownerId: owner.id.toString(),
     })
 
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(NotAllowedError)
+    await inMemoryEstablishmentsRepository.create(establishment)
+
+    const member = makeUser({
+      establishmentId: establishment.id.toString(),
+      role: 'MEMBER',
+    })
+
+    await inMemoryUsersRepository.create(member)
+
+    inMemoryUsersRepository.items[0].establishmentId =
+      establishment.id.toString()
+
+    const response = await sut.execute({
+      establishmentId: establishment.id.toString(),
+      userId: member.id.toString(),
+      name: 'New Name',
+      description: 'New Description',
+    })
+
+    expect(response.isLeft()).toBeTruthy()
+    expect(response.value).toBeInstanceOf(NotAllowedError)
   })
 })

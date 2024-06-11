@@ -11,7 +11,7 @@ import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 
 @Controller('/me')
-export class GetProfileController {
+export class GetUserProfileController {
   constructor(private getUserProfile: GetUserProfileUseCase) {}
 
   @Get()

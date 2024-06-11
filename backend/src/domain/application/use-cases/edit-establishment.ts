@@ -4,6 +4,7 @@ import { EstablishmentsRepository } from '../repositories/establishments-reposit
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { UsersRepository } from '../repositories/users-repository'
 import { NotAllowedError } from './errors/not-allowed'
+import { Injectable } from '@nestjs/common'
 
 interface EditEstablishmentUseCaseRequest {
   establishmentId: string
@@ -19,6 +20,7 @@ type EditEstablishmentUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class EditEstablishmentUseCase {
   constructor(
     private establishmentsRepository: EstablishmentsRepository,
@@ -46,6 +48,8 @@ export class EditEstablishmentUseCase {
 
     establishment.name = name
     establishment.description = description
+
+    await this.establishmentsRepository.save(establishment)
 
     return right({
       establishment,

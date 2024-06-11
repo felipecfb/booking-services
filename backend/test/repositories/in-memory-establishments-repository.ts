@@ -49,4 +49,12 @@ export class InMemoryEstablishmentsRepository
 
     return establishment
   }
+
+  async save(establishment: Establishment): Promise<void> {
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === establishment.id,
+    )
+
+    this.items[itemIndex] = establishment
+  }
 }

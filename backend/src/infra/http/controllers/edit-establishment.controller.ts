@@ -4,45 +4,44 @@ import {
   ConflictException,
   Controller,
   HttpCode,
-  Post,
+  Param,
+  Put,
 } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { CreateEstablishmentUseCase } from '@/domain/application/use-cases/create-establishment'
+import { EditEstablishmentUseCase } from '@/domain/application/use-cases/edit-establishment'
 import { EstablishmentAlreadyExistsError } from '@/domain/application/use-cases/errors/establishment-already-exists-error'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 
-const createEstablishmentBodySchema = z.object({
+const editEstablishmentBodySchema = z.object({
   name: z.string().min(4),
   description: z.string().min(10),
-  document: z.string().length(14),
 })
 
-const bodyValidationPipe = new ZodValidationPipe(createEstablishmentBodySchema)
+const bodyValidationPipe = new ZodValidationPipe(editEstablishmentBodySchema)
 
-type CreateEstablishmentBodySchema = z.infer<
-  typeof createEstablishmentBodySchema
->
+type EditEstablishmentBodySchema = z.infer<typeof editEstablishmentBodySchema>
 
-@Controller('/establishments')
-export class CreateEstablishmentController {
-  constructor(private createEstablishment: CreateEstablishmentUseCase) {}
+@Controller('/establishments/:establishmentId')
+export class EditEstablishmentController {
+  constructor(private editEstablishment: EditEstablishmentUseCase) {}
 
-  @Post()
-  @HttpCode(201)
+  @Put()
+  @HttpCode(204)
   async handle(
-    @Body(bodyValidationPipe) body: CreateEstablishmentBodySchema,
+    @Param('establishmentId') establishmentId: string,
+    @Body(bodyValidationPipe) body: EditEstablishmentBodySchema,
     @CurrentUser() user: UserPayload,
   ) {
-    const { name, description, document } = body
-    const ownerId = user.sub
+    const { name, description } = body
+    const userId = user.sub
 
-    const result = await this.createEstablishment.execute({
+    const result = await this.editEstablishment.execute({
+      establishmentId,
+      userId,
       name,
       description,
-      document,
-      ownerId,
     })
 
     if (result.isLeft()) {

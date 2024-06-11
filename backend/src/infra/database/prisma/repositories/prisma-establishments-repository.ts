@@ -77,4 +77,15 @@ export class PrismaEstablishmentsRepository
 
     return establishment
   }
+
+  async save(establishment: Establishment): Promise<void> {
+    const data = PrismaEstablishmentsMapper.toPrisma(establishment)
+
+    await this.prisma.establishment.update({
+      where: {
+        id: establishment.id.toString(),
+      },
+      data,
+    })
+  }
 }

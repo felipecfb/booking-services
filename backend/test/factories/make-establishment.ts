@@ -14,6 +14,8 @@ export function makeEstablishment(
     {
       name: faker.lorem.words(3),
       description: faker.lorem.words(10),
+      document: faker.string.numeric({ length: 14 }),
+      ownerId: faker.string.uuid(),
       ...override,
     },
     id,
