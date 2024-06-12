@@ -4,8 +4,15 @@ import { Link } from 'react-router-dom'
 import { Nav } from './nav'
 import { Avatar, AvatarImage } from './ui/avatar'
 import { Separator } from './ui/separator'
+import { useQuery } from '@tanstack/react-query'
+import { getProfile } from '@/api/get-profile'
 
 export function Sidebar() {
+  const { data: profile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile,
+  })
+
   return (
     <div className="flex flex-col justify-between min-h-screen w-1/5 bg-zinc-800 py-4">
       <section className="w-full flex flex-col items-center gap-4 py-4">
@@ -19,7 +26,7 @@ export function Sidebar() {
         <Avatar className="w-14 h-14">
           <AvatarImage src="https://gravatar.com/avatar/fd876f8cd6a58277fc664d47ea10ad19?s=200&d=robohash&r=g" />
         </Avatar>
-        <h2 className="text-zinc-50 text-lg font-bold">John Doe</h2>
+        <h2 className="text-zinc-50 text-lg font-bold">{profile?.name}</h2>
 
         <Nav.Root>
           <Nav.Link to="/">
