@@ -1,17 +1,26 @@
 import { Building, Home, LogOut, PlaneTakeoff, UserRound } from 'lucide-react'
 import { Button } from './ui/button'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Nav } from './nav'
 import { Avatar, AvatarImage } from './ui/avatar'
 import { Separator } from './ui/separator'
 import { useQuery } from '@tanstack/react-query'
 import { getProfile } from '@/api/get-profile'
+import { removeCookie } from '@/utils/remove-cookie'
 
 export function Sidebar() {
+  const navigate = useNavigate()
+
   const { data: profile } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
   })
+
+  function handleSignOut() {
+    removeCookie('access_token')
+
+    navigate('/sign-in')
+  }
 
   return (
     <div className="flex flex-col justify-between min-h-screen w-1/5 bg-zinc-800 py-4">
@@ -45,7 +54,10 @@ export function Sidebar() {
       </section>
 
       <section className="flex-1 flex items-end justify-start">
-        <Button className="bg-transparent text-zinc-50 space-x-2 hover:bg-transparent justify-start w-max font-bold">
+        <Button
+          className="bg-transparent text-zinc-50 space-x-2 hover:bg-transparent justify-start w-max font-bold"
+          onClick={handleSignOut}
+        >
           <LogOut size={20} />
           <span>Sign out</span>
         </Button>
