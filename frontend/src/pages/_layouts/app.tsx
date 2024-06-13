@@ -1,3 +1,4 @@
+import { Header } from '@/components/header'
 import { Sidebar } from '@/components/sidebar'
 import { api } from '@/lib/axios'
 import { getCookie } from '@/utils/get-cookie'
@@ -18,10 +19,12 @@ export function AppLayout() {
   })
 
   return (
-    <div>
-      <Sidebar />
+    <div className="min-h-screen flex flex-col">
+      <Header />
 
-      <div>
+      <div className="flex flex-1">
+        <Sidebar />
+
         <Outlet />
       </div>
     </div>
