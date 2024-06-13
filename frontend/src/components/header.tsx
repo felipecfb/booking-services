@@ -1,8 +1,8 @@
 import { Bell, PlaneTakeoff } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Avatar, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import { ThemeToggle } from './theme/theme-toggle'
+import { AccountMenu } from './account-menu'
 
 export function Header() {
   return (
@@ -22,9 +22,7 @@ export function Header() {
           </p>
         </Button>
 
-        <Avatar className="w-8 h-8">
-          <AvatarImage src="https://github.com/felipecfb.png" />
-        </Avatar>
+        <AccountMenu />
       </div>
     </header>
   )

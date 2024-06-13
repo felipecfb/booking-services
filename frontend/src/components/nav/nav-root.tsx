@@ -7,7 +7,7 @@ export type NavRootProps = ComponentProps<'nav'> & {
 
 export function NavRoot({ children, ...props }: NavRootProps) {
   return (
-    <nav className={twMerge('w-full space-y-4 p-4', props.className)}>
+    <nav className={twMerge('w-full p-4 flex flex-col gap-4', props.className)}>
       {children}
     </nav>
   )

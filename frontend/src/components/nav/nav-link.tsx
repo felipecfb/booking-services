@@ -8,8 +8,8 @@ export function NavLink(props: NavLinkProps) {
   return (
     <Link
       data-current={pathname === props.to}
-      className="flex items-center gap-2 text-sm font-medium text-zinc-50 data-[current=true]:bg-zinc-700 w-full p-4 rounded-lg hover:bg-zinc-700"
       {...props}
+      className="bg-background rounded-full p-3 transition-colors duration-200 hover:bg-primary data-[current=true]:bg-primary data-[current=true]:text-background hover:text-background"
     />
   )
 }
