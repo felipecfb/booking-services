@@ -6,7 +6,7 @@ import { AccountMenu } from './account-menu'
 
 export function Header() {
   return (
-    <header className="bg-muted flex items-center justify-between p-4">
+    <header className="bg-muted flex items-center justify-between p-4 border-b-[0.05px] border-zinc-300 dark:border-zinc-600">
       <Link to="/">
         <PlaneTakeoff size={40} className="text-primary" />
       </Link>
