@@ -8,7 +8,7 @@ export function Header() {
   return (
     <header className="bg-muted flex items-center justify-between p-4">
       <Link to="/">
-        <PlaneTakeoff size={40} className="text-zinc-50" />
+        <PlaneTakeoff size={40} className="text-primary" />
       </Link>
 
       <div className="flex items-center gap-4">
