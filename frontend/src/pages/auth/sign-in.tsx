@@ -5,7 +5,6 @@ import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { signIn } from '@/api/sign-in'
 import { api } from '@/lib/axios'
 import { setCookie } from '@/utils/set-cookie'
@@ -66,14 +65,16 @@ export function SignIn() {
           </div>
 
           <form onSubmit={handleSubmit(handleSignIn)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Seu e-mail</Label>
-              <Input id="email" type="email" {...register('email')} />
-            </div>
+            <Input
+              id="email"
+              type="email"
+              {...register('email')}
+              placeholder="Seu email"
+            />
 
             <PasswordInput
               id="password"
-              label="Sua senha"
+              placeholder="Sua senha"
               register={register('password')}
             />
 
