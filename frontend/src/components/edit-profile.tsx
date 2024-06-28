@@ -28,8 +28,6 @@ export function EditProfile() {
     queryFn: getProfile,
   })
 
-  console.log(profile?.email)
-
   const {
     register,
     handleSubmit,
