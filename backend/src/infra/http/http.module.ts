@@ -13,6 +13,8 @@ import { GetUserProfileController } from './controllers/get-user-profile.control
 import { GetUserProfileUseCase } from '@/domain/application/use-cases/get-user-profile'
 import { EditEstablishmentController } from './controllers/edit-establishment.controller'
 import { EditEstablishmentUseCase } from '@/domain/application/use-cases/edit-establishment'
+import { EditProfileController } from './controllers/edit-profile.controller'
+import { EditProfileUseCase } from '@/domain/application/use-cases/edit-profile'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -22,6 +24,7 @@ import { EditEstablishmentUseCase } from '@/domain/application/use-cases/edit-es
     AuthenticateController,
     GetUserProfileController,
     EditEstablishmentController,
+    EditProfileController,
   ],
   providers: [
     CreateEstablishmentUseCase,
@@ -29,6 +32,7 @@ import { EditEstablishmentUseCase } from '@/domain/application/use-cases/edit-es
     AuthenticateUserUseCase,
     GetUserProfileUseCase,
     EditEstablishmentUseCase,
+    EditProfileUseCase,
   ],
 })
 export class HttpModule {}
