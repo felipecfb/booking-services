@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { signIn } from '@/api/sign-in'
 import { api } from '@/lib/axios'
 import { setCookie } from '@/utils/set-cookie'
+import { PasswordInput } from '@/components/password-input'
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -70,10 +71,11 @@ export function SignIn() {
               <Input id="email" type="email" {...register('email')} />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Sua senha</Label>
-              <Input id="password" type="password" {...register('password')} />
-            </div>
+            <PasswordInput
+              id="password"
+              label="Sua senha"
+              register={register('password')}
+            />
 
             <Button disabled={isSubmitting} className="w-full" type="submit">
               Acessar painel
